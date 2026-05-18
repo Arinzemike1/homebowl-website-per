@@ -65,7 +65,7 @@ export default function Waitlist() {
   return (
     <div className="min-h-screen bg-(--color-sand) flex flex-col">
       {/* Minimal Nav */}
-      <header className="flex items-center justify-center px-6 py-5 border-b border-(--color-sand-dark)">
+      <header className="flex items-center justify-center px-6 py-2 border-b border-(--color-sand-dark)">
         <Logo />
       </header>
 
@@ -163,7 +163,7 @@ export default function Waitlist() {
                   </p>
                   <div className="flex gap-3 mt-2">
                     <a
-                      href={`https://twitter.com/intent/tweet?text=Just joined the @homebowl_app waitlist! Home-cooked meals delivered to your door. Get early access 👇&url=${encodeURIComponent("https://homebowl.app")}`}
+                      href={`https://twitter.com/intent/tweet?text=Just joined the @gethomebowl waitlist! Home-cooked meals delivered to your door. Get early access 👇&url=${encodeURIComponent("https://gethomebowl.com")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-4 py-2 rounded-lg bg-(--color-forest-green) text-white text-sm font-medium hover:bg-(--color-forest-green-dark) transition-colors"
@@ -171,7 +171,7 @@ export default function Waitlist() {
                       Share on X
                     </a>
                     <a
-                      href={`https://wa.me/?text=I just joined the HomeBowl waitlist! Home-cooked meals delivered to your door. Join here: https://homebowl.app`}
+                      href={`https://wa.me/?text=I just joined the HomeBowl waitlist! Home-cooked meals delivered to your door. Join here: https://gethomebowl.com`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="px-4 py-2 rounded-lg bg-(--color-orange-tint) text-(--color-burnt-orange) border border-burnt-orange/30 text-sm font-medium hover:bg-(--color-sand-dark) transition-colors"

@@ -125,7 +125,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-6 gap-8 lg:gap-12">
           {/* Brand column */}
           <div className="col-span-2">
-            <Logo textColor="white" className="mb-4" />
+            <Logo />
             <p className="text-white/55 text-sm leading-relaxed mb-6 max-w-xs">
               Connecting communities through the authentic flavors of home
               cooking. Real chefs, real food, real love.

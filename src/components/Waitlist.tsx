@@ -6,9 +6,10 @@ import {
   Mail,
   ArrowRight,
   CheckCircle,
-//   Users,
+  //   Users,
   ChefHat,
   Utensils,
+  Phone,
   Loader2,
 } from "lucide-react";
 import Logo from "./Logo";
@@ -24,6 +25,7 @@ import Logo from "./Logo";
 
 export default function Waitlist() {
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [role, setRole] = useState<"foodie" | "chef" | "">("");
   const [status, setStatus] = useState<
     "idle" | "loading" | "success" | "error"
@@ -41,7 +43,7 @@ export default function Waitlist() {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, role }),
+        body: JSON.stringify({ email, phone, role }),
       });
 
       if (!res.ok) {
@@ -237,6 +239,29 @@ export default function Waitlist() {
                     />
                   </div>
 
+                  {/* Phone */}
+                  <div className="relative">
+                    <Phone
+                      size={18}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-(--color-brown-mid)/60"
+                    />
+                    <input
+                      type="tel"
+                      name="phone"
+                      required
+                      placeholder="Enter your phone number"
+                      maxLength={11}
+                      value={phone}
+                      onChange={(e) => {
+                        const raw = e.target.value;
+                        setPhone(
+                          raw.startsWith("0") ? "+234" + raw.slice(1) : raw,
+                        );
+                      }}
+                      className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-(--color-sand-dark) bg-white text-(--color-brown) placeholder:text-(--color-brown-mid)/50 focus:outline-none focus:ring-2 focus:ring-burnt-orange/40 focus:border-(--color-burnt-orange) transition-all"
+                    />
+                  </div>
+
                   {/* Error */}
                   {status === "error" && (
                     <p className="text-sm text-red-600 text-center">
@@ -247,7 +272,7 @@ export default function Waitlist() {
                   {/* Submit */}
                   <button
                     type="submit"
-                    disabled={status === "loading" || !email || !role}
+                    disabled={status === "loading" || !email || !phone || !role}
                     className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-(--color-burnt-orange) hover:bg-(--color-burnt-orange-dark) disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-base transition-all duration-200 shadow-md shadow-(--color-burnt-orange)/30"
                   >
                     {status === "loading" ? (

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 // ---------------------------------------------------------------------------
 // Waitlist API route
-// POST /api/waitlist  — { email: string, role: "foodie" | "chef" }
+// POST /api/waitlist  — { email: string, phone?: string, role: "foodie" | "chef" }
 //
 // Required environment variables (set in .env.local):
 //   BREVO_API_KEY   — Brevo API key (Settings > API Keys)
@@ -13,6 +13,7 @@ type Role = "foodie" | "chef";
 
 interface RequestBody {
   email: string;
+  phone: string;
   role: Role;
 }
 
@@ -28,11 +29,11 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { email, role } = body;
+  const { email, phone, role } = body;
 
-  if (!email || !role) {
+  if (!email || !phone || !role) {
     return NextResponse.json(
-      { message: "Email and role are required." },
+      { message: "Email, phone number, and role are required." },
       { status: 400 },
     );
   }
@@ -64,14 +65,20 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    await submitToBrevo(email, role, apiKey);
-    await sendBrevoTransactional(email, role, apiKey);
+    await submitToBrevo(email, role, apiKey, phone);
   } catch (err) {
-    console.error("[waitlist] Provider error:", err);
+    console.error("[waitlist] Failed to create Brevo contact:", err);
     return NextResponse.json(
       { message: "Failed to save your email. Please try again." },
       { status: 500 },
     );
+  }
+
+  // Send welcome email — failure here does not block the signup
+  try {
+    await sendBrevoTransactional(email, role, apiKey);
+  } catch (err) {
+    console.error("[waitlist] Failed to send welcome email (non-fatal):", err);
   }
 
   return NextResponse.json(
@@ -81,11 +88,18 @@ export async function POST(req: NextRequest) {
 }
 
 // --- Brevo: add contact to list --------------------------------------------
-async function submitToBrevo(email: string, role: Role, apiKey: string) {
+async function submitToBrevo(
+  email: string,
+  role: Role,
+  apiKey: string,
+  phone: string,
+) {
   const listId = process.env.BREVO_LIST_ID
     ? parseInt(process.env.BREVO_LIST_ID)
     : undefined;
   if (!listId) throw new Error("BREVO_LIST_ID is not set.");
+
+  const attributes: Record<string, string> = { ROLE: role, SMS: phone };
 
   const res = await fetch("https://api.brevo.com/v3/contacts", {
     method: "POST",
@@ -95,7 +109,7 @@ async function submitToBrevo(email: string, role: Role, apiKey: string) {
     },
     body: JSON.stringify({
       email,
-      attributes: { ROLE: role },
+      attributes,
       listIds: [listId],
       updateEnabled: true,
     }),

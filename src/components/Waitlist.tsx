@@ -250,7 +250,6 @@ export default function Waitlist() {
                       name="phone"
                       required
                       placeholder="Enter your phone number"
-                      maxLength={11}
                       value={phone}
                       onChange={(e) => {
                         const raw = e.target.value;

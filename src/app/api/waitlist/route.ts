@@ -4,14 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 // Waitlist API route
 // POST /api/waitlist  — { email: string, role: "foodie" | "chef" }
 //
-// This route forwards submissions to your chosen free provider.
-// See WAITLIST_SETUP.md at the project root for setup instructions.
-//
 // Required environment variables (set in .env.local):
-//   WAITLIST_PROVIDER  — "loops" | "brevo" | "mailchimp"
-//   WAITLIST_API_KEY   — API key from the chosen provider
-//   BREVO_LIST_ID (Brevo only) — numeric list ID
-//   MAILCHIMP_LIST_ID + MAILCHIMP_DC (Mailchimp only)
+//   BREVO_API_KEY   — Brevo API key (Settings > API Keys)
+//   BREVO_LIST_ID   — Numeric contact list ID to add signups to
 // ---------------------------------------------------------------------------
 
 type Role = "foodie" | "chef";
@@ -57,14 +52,11 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const provider = process.env.WAITLIST_PROVIDER;
-  const apiKey = process.env.WAITLIST_API_KEY;
+  const apiKey = process.env.BREVO_API_KEY;
 
-  if (!provider || !apiKey) {
+  if (!apiKey) {
     // During development without env vars, just return success so the UI works.
-    console.warn(
-      "[waitlist] WAITLIST_PROVIDER or WAITLIST_API_KEY not set — skipping provider call.",
-    );
+    console.warn("[waitlist] BREVO_API_KEY not set — skipping provider call.");
     return NextResponse.json(
       { message: "Signed up successfully." },
       { status: 200 },
@@ -72,18 +64,8 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    if (provider === "loops") {
-      await submitToLoops(email, role, apiKey);
-    } else if (provider === "brevo") {
-      await submitToBrevo(email, role, apiKey);
-    } else if (provider === "mailchimp") {
-      await submitToMailchimp(email, role, apiKey);
-    } else {
-      return NextResponse.json(
-        { message: "Unknown WAITLIST_PROVIDER." },
-        { status: 500 },
-      );
-    }
+    await submitToBrevo(email, role, apiKey);
+    await sendBrevoTransactional(email, role, apiKey);
   } catch (err) {
     console.error("[waitlist] Provider error:", err);
     return NextResponse.json(
@@ -98,29 +80,7 @@ export async function POST(req: NextRequest) {
   );
 }
 
-// --- Loops (loops.so) -------------------------------------------------------
-async function submitToLoops(email: string, role: Role, apiKey: string) {
-  const res = await fetch("https://app.loops.so/api/v1/contacts/create", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email,
-      userGroup: role,
-      source: "waitlist",
-      subscribed: true,
-    }),
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Loops error ${res.status}: ${text}`);
-  }
-}
-
-// --- Brevo (brevo.com) -------------------------------------------------------
+// --- Brevo: add contact to list --------------------------------------------
 async function submitToBrevo(email: string, role: Role, apiKey: string) {
   const listId = process.env.BREVO_LIST_ID
     ? parseInt(process.env.BREVO_LIST_ID)
@@ -144,40 +104,37 @@ async function submitToBrevo(email: string, role: Role, apiKey: string) {
   // 204 = already exists and updated, 201 = created
   if (res.status !== 201 && res.status !== 204) {
     const text = await res.text();
-    throw new Error(`Brevo error ${res.status}: ${text}`);
+    throw new Error(`Brevo contact error ${res.status}: ${text}`);
   }
 }
 
-// --- Mailchimp --------------------------------------------------------------
-async function submitToMailchimp(email: string, role: Role, apiKey: string) {
-  const listId = process.env.MAILCHIMP_LIST_ID;
-  const dc = process.env.MAILCHIMP_DC; // e.g. "us21"
-  if (!listId || !dc)
-    throw new Error("MAILCHIMP_LIST_ID or MAILCHIMP_DC is not set.");
+// --- Brevo: send transactional welcome email --------------------------------
+const BREVO_TEMPLATE_IDS: Record<Role, number> = {
+  chef: 1,
+  foodie: 2,
+};
 
-  const res = await fetch(
-    `https://${dc}.api.mailchimp.com/3.0/lists/${listId}/members`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Basic ${Buffer.from(`anystring:${apiKey}`).toString("base64")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email_address: email,
-        status: "subscribed",
-        merge_fields: { ROLE: role },
-      }),
+async function sendBrevoTransactional(
+  email: string,
+  role: Role,
+  apiKey: string,
+) {
+  const templateId = BREVO_TEMPLATE_IDS[role];
+
+  const res = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": apiKey,
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify({
+      to: [{ email }],
+      templateId,
+    }),
+  });
 
-  // 400 with "Member Exists" is fine
   if (!res.ok) {
-    const data = await res.json().catch(() => ({}));
-    if (data.title !== "Member Exists") {
-      throw new Error(
-        `Mailchimp error ${res.status}: ${data.detail || JSON.stringify(data)}`,
-      );
-    }
+    const text = await res.text();
+    throw new Error(`Brevo transactional error ${res.status}: ${text}`);
   }
 }

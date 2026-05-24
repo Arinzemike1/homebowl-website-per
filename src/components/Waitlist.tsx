@@ -6,21 +6,21 @@ import {
   Mail,
   ArrowRight,
   CheckCircle,
-  Users,
+//   Users,
   ChefHat,
   Utensils,
   Loader2,
 } from "lucide-react";
 import Logo from "./Logo";
 
-const stats = [
-  { value: "2,400+", label: "Already signed up", icon: <Users size={18} /> },
-  {
-    value: "Home Chefs",
-    label: "Joining the kitchen",
-    icon: <ChefHat size={18} />,
-  },
-];
+// const stats = [
+//   { value: "2,400+", label: "Already signed up", icon: <Users size={18} /> },
+//   {
+//     value: "Home Chefs",
+//     label: "Joining the kitchen",
+//     icon: <ChefHat size={18} />,
+//   },
+// ];
 
 export default function Waitlist() {
   const [email, setEmail] = useState("");
@@ -107,7 +107,7 @@ export default function Waitlist() {
           </motion.p>
 
           {/* Stats */}
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.25 }}
@@ -127,7 +127,7 @@ export default function Waitlist() {
                 </div>
               </div>
             ))}
-          </motion.div>
+          </motion.div> */}
 
           {/* Form Card */}
           <motion.div
@@ -159,7 +159,7 @@ export default function Waitlist() {
                   </h2>
                   <p className="text-(--color-brown-mid)">
                     We&apos;ll email you at <strong>{email}</strong> when
-                    HomeBowl launches in your area. Spread the word!
+                    HomeBowl launches. Spread the word!
                   </p>
                   <div className="flex gap-3 mt-2">
                     <a

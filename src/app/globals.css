@@ -1,8 +1,11 @@
 @import "tailwindcss";
+@import "lenis/dist/lenis.css";
 
 :root {
   --background: #f3e9dc;
   --foreground: #2c1a0e;
+
+  /* Core brand (unchanged) */
   --color-sand: #f3e9dc;
   --color-sand-dark: #e8d5c0;
   --color-burnt-orange: #c65d07;
@@ -16,6 +19,22 @@
   --color-cream: #fdf6ee;
   --color-orange-tint: #fdf0e6;
   --color-green-tint: #ebf3ec;
+
+  /* Campaign palette (sampled from the social posts) */
+  --color-espresso-950: #1a0d07;
+  --color-espresso-900: #26130b;
+  --color-espresso-800: #361b10;
+  --color-espresso-700: #4a281b;
+  --color-cocoa: #653d29;
+  --color-tangerine: #f78822;
+  --color-ember: #d06a1c;
+  --color-ivory: #f3eadd;
+  --color-paper: #e1cbb5;
+  --color-kraft: #c89f6c;
+  --color-tomato: #d8322b;
+
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 @theme inline {
@@ -23,6 +42,10 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-jakarta);
   --font-fraunces: var(--font-fraunces-var);
+  --font-display: var(--font-fraunces-var);
+  --font-script: var(--font-sacramento);
+  --font-hand: var(--font-caveat);
+
   --color-sand: #f3e9dc;
   --color-sand-dark: #e8d5c0;
   --color-burnt-orange: #c65d07;
@@ -36,115 +59,270 @@
   --color-cream: #fdf6ee;
   --color-orange-tint: #fdf0e6;
   --color-green-tint: #ebf3ec;
+
+  --color-espresso-950: #1a0d07;
+  --color-espresso-900: #26130b;
+  --color-espresso-800: #361b10;
+  --color-espresso-700: #4a281b;
+  --color-cocoa: #653d29;
+  --color-tangerine: #f78822;
+  --color-ember: #d06a1c;
+  --color-ivory: #f3eadd;
+  --color-paper: #e1cbb5;
+  --color-kraft: #c89f6c;
+  --color-tomato: #d8322b;
+
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * {
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 body {
-  background: var(--background);
+  background: var(--color-espresso-950);
   color: var(--foreground);
   font-family: var(--font-jakarta), "Plus Jakarta Sans", system-ui, sans-serif;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
-/* Custom scrollbar */
+::selection {
+  background: var(--color-tangerine);
+  color: var(--color-espresso-950);
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-sand);
+  background: var(--color-espresso-950);
 }
 ::-webkit-scrollbar-thumb {
   background: var(--color-burnt-orange);
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
-/* Utility animations */
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-12px);
+/* ---------------------------------------------------------------------------
+   Typography
+   --------------------------------------------------------------------------- */
+
+/* Heavy poster serif used across the campaign ("MEET TRUSTED HOME") */
+.display {
+  font-family: var(--font-fraunces-var), Georgia, serif;
+  font-weight: 900;
+  font-variation-settings:
+    "opsz" 144,
+    "SOFT" 30,
+    "WONK" 0;
+  letter-spacing: -0.012em;
+  line-height: 0.9;
+}
+
+/* Hand-lettered accent word ("Chefs", "Inspire", "Week").
+   The stroke thickens Sacramento to match the posts' monoline script. */
+.script {
+  font-family: var(--font-sacramento), cursive;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0;
+  text-transform: none;
+  -webkit-text-stroke: 0.032em currentColor;
+  padding: 0 0.12em 0.12em 0.06em;
+}
+.script-gradient {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-ember) 0%,
+    #e2a071 42%,
+    var(--color-ivory) 88%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke-color: transparent;
+}
+
+.hand {
+  font-family: var(--font-caveat), cursive;
+}
+
+/* ---------------------------------------------------------------------------
+   Surfaces & textures
+   --------------------------------------------------------------------------- */
+
+.checker {
+  --cell: 36px;
+  background: repeating-conic-gradient(
+      var(--color-tangerine) 0 25%,
+      var(--color-ivory) 0 50%
+    )
+    0 0 / calc(var(--cell) * 2) calc(var(--cell) * 2);
+}
+
+.grain {
+  position: relative;
+  isolation: isolate;
+}
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--noise);
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  /* below the content, above the section background (isolation creates the context) */
+  z-index: -1;
+}
+
+/* Moody espresso backdrop with lamp-light bokeh (posts 1, 2, 5) */
+.surface-bokeh {
+  background:
+    radial-gradient(
+      60% 55% at 78% 18%,
+      rgba(165, 98, 58, 0.55),
+      transparent 70%
+    ),
+    radial-gradient(
+      50% 60% at 12% 30%,
+      rgba(122, 76, 52, 0.45),
+      transparent 70%
+    ),
+    radial-gradient(
+      70% 60% at 50% 110%,
+      rgba(110, 48, 20, 0.55),
+      transparent 70%
+    ),
+    linear-gradient(180deg, #3b2016 0%, #2a150d 55%, #1f0f08 100%);
+}
+
+/* Dark table-top (posts 4 & 6): soft vertical grain under a vignette */
+.surface-wood {
+  background-color: #3a2415;
+  background-image:
+    radial-gradient(
+      120% 90% at 50% 10%,
+      transparent 35%,
+      rgba(12, 5, 2, 0.6) 100%
+    ),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='900' height='900'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.045 0.0025' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.07 0 0 0 0 0.035 0 0 0 -1.1 0.75'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23w)'/%3E%3C/svg%3E"),
+    var(--noise);
+  background-size:
+    100% 100%,
+    900px 900px,
+    220px 220px;
+  background-blend-mode: normal, normal, soft-light;
+}
+
+/* Kraft envelope + notebook paper (post 7) */
+.surface-kraft {
+  background-color: var(--color-kraft);
+  background-image:
+    radial-gradient(
+      90% 70% at 30% 20%,
+      rgba(255, 236, 205, 0.35),
+      transparent 70%
+    ),
+    linear-gradient(rgba(200, 159, 108, 0.7), rgba(200, 159, 108, 0.7)),
+    var(--noise);
+  background-size:
+    100% 100%,
+    100% 100%,
+    220px 220px;
+}
+.surface-notebook {
+  background-color: #f4e6d6;
+  background-image: radial-gradient(
+    rgba(92, 61, 32, 0.22) 1.2px,
+    transparent 1.4px
+  );
+  background-size: 26px 26px;
+}
+
+/* Warm sand with a whisper of paper tooth (noise shows through at ~10%) */
+.surface-paper {
+  background-color: var(--color-sand);
+  background-image:
+    linear-gradient(rgba(243, 233, 220, 0.9), rgba(243, 233, 220, 0.9)),
+    var(--noise);
+  background-size:
+    100% 100%,
+    220px 220px;
+}
+
+/* Scalloped ticket edges ("Bowl of the Week" card) */
+.ticket {
+  --r: 7px;
+  --gap: 22px;
+  -webkit-mask:
+    radial-gradient(circle var(--r) at 50% 0, #0000 97%, #000) 0 0 / var(--gap)
+      51% repeat-x,
+    radial-gradient(circle var(--r) at 50% 100%, #0000 97%, #000) 0 100% /
+      var(--gap) 51% repeat-x;
+  mask:
+    radial-gradient(circle var(--r) at 50% 0, #0000 97%, #000) 0 0 / var(--gap)
+      51% repeat-x,
+    radial-gradient(circle var(--r) at 50% 100%, #0000 97%, #000) 0 100% /
+      var(--gap) 51% repeat-x;
+}
+
+.shadow-sticker {
+  filter: drop-shadow(0 6px 10px rgba(20, 8, 3, 0.35));
+}
+
+/* ---------------------------------------------------------------------------
+   Intro curtain — pure CSS so the page never depends on JS to become visible.
+   The inline script in layout.tsx marks repeat visits to skip it.
+   --------------------------------------------------------------------------- */
+
+.intro {
+  animation: intro-lift 1s var(--ease-premium) 1.55s forwards;
+}
+.intro-mark {
+  animation: intro-pop 0.9s var(--ease-premium) 0.1s both;
+}
+.intro-word {
+  animation: intro-wipe 0.9s var(--ease-premium) 0.45s both;
+}
+.intro-tag {
+  animation: intro-fade 0.8s ease-out 0.8s both;
+}
+html[data-intro-seen] .intro {
+  display: none;
+}
+
+@keyframes intro-lift {
+  to {
+    transform: translateY(-105%);
+    border-bottom-left-radius: 50% 12vh;
+    border-bottom-right-radius: 50% 12vh;
+    visibility: hidden;
   }
 }
-@keyframes float-slow {
-  0%,
-  100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-18px) rotate(3deg);
-  }
-}
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.8);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(1.6);
-    opacity: 0;
-  }
-}
-@keyframes shimmer {
-  0% {
-    background-position: -200% center;
-  }
-  100% {
-    background-position: 200% center;
-  }
-}
-@keyframes spin-slow {
+@keyframes intro-pop {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: scale(0.6) rotate(-14deg);
+  }
+}
+@keyframes intro-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
   }
   to {
-    transform: rotate(360deg);
+    clip-path: inset(0 0 0 0);
   }
 }
-@keyframes wave {
-  0%,
-  100% {
-    transform: scaleY(1);
-  }
-  50% {
-    transform: scaleY(0.6);
+@keyframes intro-fade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
   }
 }
 
-.animate-float {
-  animation: float 4s ease-in-out infinite;
-}
-.animate-float-slow {
-  animation: float-slow 6s ease-in-out infinite;
-}
-.animate-pulse-ring {
-  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-}
-.animate-spin-slow {
-  animation: spin-slow 12s linear infinite;
-}
-
-/* Glass morphism utility */
-.glass {
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-}
-
-/* Gradient text */
-.text-gradient {
-  background: linear-gradient(135deg, #c65d07 0%, #e8742a 50%, #386641 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    display: none;
+  }
 }

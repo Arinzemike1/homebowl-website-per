@@ -49,7 +49,7 @@ export default function Ticker() {
             ))}
           </Marquee>
         </div>
-        <div className="-mt-9 -rotate-[1.6deg] bg-tangerine py-3 text-espresso-950 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.55)] sm:-mt-11 sm:py-4">
+        <div className="-mt-9 rotate-[-1.6deg] bg-tangerine py-3 text-espresso-950 shadow-[0_20px_40px_-15px_rgba(0,0,0,0.55)] sm:-mt-11 sm:py-4">
           <Marquee baseVelocity={-2.4}>
             {dishes.map((dish) => (
               <span key={dish} className="flex items-center">

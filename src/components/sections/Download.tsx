@@ -40,7 +40,7 @@ export default function Download() {
               lines={["Meet"]}
             />
             <ScriptWord
-              className="-mt-[0.35em] block text-[1.35em]"
+              className="mt-[-0.35em] block text-[1.35em]"
               delay={0.3}
             >
               HomeBowl
@@ -69,7 +69,7 @@ export default function Download() {
           </FadeUp>
         </div>
 
-        <div className="relative mx-auto flex h-[560px] w-full max-w-[520px] items-end justify-center lg:h-[680px]">
+        <div className="relative mx-auto flex h-140 w-full max-w-130 items-end justify-center lg:h-170">
           <div className="checker absolute bottom-0 left-1/2 h-[46%] w-[74%] -translate-x-1/2 [--cell:34px]" />
           <motion.div
             style={{ rotate: bowlRotate, y: bowlY }}
@@ -86,7 +86,7 @@ export default function Download() {
           </motion.div>
           <motion.div
             style={{ y: phoneY, rotate: phoneRotate }}
-            className="relative mb-[-110px] origin-bottom scale-[0.86] sm:scale-100"
+            className="relative -mb-27.5 origin-bottom scale-[0.86] sm:scale-100"
           >
             <Phone>
               <HomeScreen />

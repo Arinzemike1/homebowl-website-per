@@ -53,7 +53,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "HomeBowl — Good food. Home made.",
+        alt: "HomeBowl | Good food. Home made.",
       },
     ],
     locale: "en_US",

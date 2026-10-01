@@ -226,7 +226,7 @@ export default function Waitlist() {
                   <div className="relative">
                     <Mail
                       size={18}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-(--color-brown-mid)/60"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-brown-mid/60"
                     />
                     <input
                       type="email"
@@ -235,7 +235,7 @@ export default function Waitlist() {
                       placeholder="Enter your email address"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-(--color-sand-dark) bg-white text-(--color-brown) placeholder:text-(--color-brown-mid)/50 focus:outline-none focus:ring-2 focus:ring-burnt-orange/40 focus:border-(--color-burnt-orange) transition-all"
+                      className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-(--color-sand-dark) bg-white text-(--color-brown) placeholder:text-brown-mid/50 focus:outline-none focus:ring-2 focus:ring-burnt-orange/40 focus:border-(--color-burnt-orange) transition-all"
                     />
                   </div>
 
@@ -243,7 +243,7 @@ export default function Waitlist() {
                   <div className="relative">
                     <Phone
                       size={18}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-(--color-brown-mid)/60"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-brown-mid/60"
                     />
                     <input
                       type="tel"
@@ -257,7 +257,7 @@ export default function Waitlist() {
                           raw.startsWith("0") ? "+234" + raw.slice(1) : raw,
                         );
                       }}
-                      className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-(--color-sand-dark) bg-white text-(--color-brown) placeholder:text-(--color-brown-mid)/50 focus:outline-none focus:ring-2 focus:ring-burnt-orange/40 focus:border-(--color-burnt-orange) transition-all"
+                      className="w-full pl-11 pr-4 py-3.5 rounded-xl border border-(--color-sand-dark) bg-white text-(--color-brown) placeholder:text-brown-mid/50 focus:outline-none focus:ring-2 focus:ring-burnt-orange/40 focus:border-(--color-burnt-orange) transition-all"
                     />
                   </div>
 
@@ -283,7 +283,7 @@ export default function Waitlist() {
                     )}
                   </button>
 
-                  <p className="text-center text-xs text-(--color-brown-mid)/70">
+                  <p className="text-center text-xs text-brown-mid/70">
                     No spam, ever. Unsubscribe anytime.
                   </p>
                 </motion.form>
@@ -294,7 +294,7 @@ export default function Waitlist() {
       </main>
 
       {/* Footer */}
-      <footer className="text-center py-6 text-sm text-(--color-brown-mid)/60 border-t border-(--color-sand-dark)">
+      <footer className="text-center py-6 text-sm text-brown-mid/60 border-t border-(--color-sand-dark)">
         © {new Date().getFullYear()} HomeBowl. All rights reserved.
       </footer>
     </div>

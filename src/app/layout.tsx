@@ -33,7 +33,7 @@ const caveat = Caveat({
   subsets: ["latin"],
 });
 
-const title = "HomeBowl — Good food. Home made.";
+const title = "HomeBowl | Good food. Home made.";
 const description =
   "HomeBowl is where home chefs create, connect and sell. Discover great home food, follow the chefs behind it, and find your next favourite bowl.";
 

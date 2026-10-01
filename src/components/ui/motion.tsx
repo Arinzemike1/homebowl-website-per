@@ -62,7 +62,7 @@ export function LineReveal({
       {lines.map((line, i) => (
         <motion.span
           key={i}
-          className="-mt-[0.06em] block overflow-hidden pt-[0.06em]"
+          className="mt-[-0.06em] block overflow-hidden pt-[0.06em]"
           initial="hidden"
           {...(trigger === "mount"
             ? { animate: "show" }
@@ -188,17 +188,17 @@ export function MagneticLink({
     >
       <span
         aria-hidden
-        className="absolute inset-0 translate-y-[101%] rounded-full bg-(--fill) transition-transform duration-500 ease-(--ease-premium) group-hover:translate-y-0"
+        className="absolute inset-0 translate-y-[101%] rounded-full bg-(--fill) transition-transform duration-500 ease-premium group-hover:translate-y-0"
       />
       <span className="relative">{children}</span>
       <span className="relative grid size-5 place-items-center overflow-hidden">
         <ArrowUpRight
           size={17}
-          className="transition-transform duration-500 ease-(--ease-premium) group-hover:translate-x-5 group-hover:-translate-y-5"
+          className="transition-transform duration-500 ease-premium group-hover:translate-x-5 group-hover:-translate-y-5"
         />
         <ArrowUpRight
           size={17}
-          className="absolute -translate-x-5 translate-y-5 transition-transform duration-500 ease-(--ease-premium) group-hover:translate-x-0 group-hover:translate-y-0"
+          className="absolute -translate-x-5 translate-y-5 transition-transform duration-500 ease-premium group-hover:translate-x-0 group-hover:translate-y-0"
         />
       </span>
     </motion.a>
